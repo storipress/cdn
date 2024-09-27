@@ -1,0 +1,24 @@
+{
+	admin 0.0.0.0:2019 {
+	}
+
+	servers {
+		metrics
+	}
+
+	storage redis {
+		host "redis.example.com"
+		db {$REDIS_DB}
+		key_prefix "caddytls"
+		value_prefix "caddy-storage-redis"
+		timeout 5
+		tls_enabled "false"
+		tls_insecure "true"
+	}
+
+	on_demand_tls {
+		ask "https://{$API_ENDPOINT}/caddy/on-demand-ask"
+	}
+}
+
+import ./files/*

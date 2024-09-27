@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  caddy:
+    image: "ghcr.io/storipress/cdn-caddy:${APP_ENV}"
+    container_name: caddy
+    restart: always
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "443:443/udp"
+      - "2019:2019/tcp"

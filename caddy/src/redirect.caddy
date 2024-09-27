@@ -1,0 +1,11 @@
+DOMAIN {
+    tls {
+        on_demand
+
+        issuer acme {
+            disable_tlsalpn_challenge
+        }
+    }
+
+    redir https://REDIRECT{uri}
+}

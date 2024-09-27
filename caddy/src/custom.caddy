@@ -1,0 +1,35 @@
+DOMAIN {
+    tls {
+        on_demand
+
+        issuer acme {
+            disable_tlsalpn_challenge
+        }
+    }
+
+    header Server "storipress"
+
+    @v1 {
+        expression path_regexp('^/404$') != true
+        expression path_regexp('(?:\\.(?:html|css|js|webp|jpe?g|png|ico|svg|gif))$') != true
+        expression host('example.com') == true
+    }
+
+    @v2 `!host('example.com')`
+
+    uri @v2 strip_suffix /
+
+    uri @v1 path_regexp (\/[^\.\/]+?)$ $1/
+
+    reverse_proxy * REVERSE_PATH {
+        header_up Host {http.reverse_proxy.upstream.hostport}
+        header_down -Server
+
+        @error status 522
+        handle_response @error {
+            root    * /usr/local/caddy/pages
+            rewrite * /404.html
+            file_server
+        }
+    }
+}
